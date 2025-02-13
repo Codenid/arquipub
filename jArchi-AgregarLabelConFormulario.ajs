@@ -1,0 +1,28 @@
+﻿/*
+ * Agrega Tributos
+ */
+ 
+console.show();
+console.clear();
+console.log("Asignar Label Expression");
+
+// Mostrar cuadro de diálogo para ingresar JSON
+let userInput = window.prompt("Ingrese el Label Expression:", '');
+
+// Verificar si el usuario canceló la entrada
+if (!userInput) {
+   console.log("Importación cancelada.");
+}
+
+var label = userInput.toString();
+
+// Obtener el elemento seleccionado en el modelo
+var component = selection.first();
+
+// Verificar si el componente existe
+if (component) {
+    component.LabelExpression = label;
+    console.log("Label Expression agregado exitosamente.");
+} else {
+    console.log("Componente no encontrado.");
+}

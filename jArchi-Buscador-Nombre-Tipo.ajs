@@ -1,0 +1,175 @@
+﻿/*
+ * Agrega Tributos
+ */
+ 
+console.show();
+console.clear();
+
+// Ruta del archivo JSON
+let path = RutaOrigenDeDatosCSV("C:\\CatalogoBB", 'Componentes', 'csv');
+let atributos = new Array();
+
+var FileReader = Java.type('java.io.FileReader');
+var BufferedReader = Java.type('java.io.BufferedReader');
+var InputStreamReader = Java.type('java.io.InputStreamReader');
+var FileInputStream = Java.type('java.io.FileInputStream');
+
+// Función para leer el archivo CSV y convertirlo en un array de objetos
+function leerCSV(filePath) {
+    var registros = [];
+    var br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), 'UTF-8'));
+    var line;
+    var headers = br.readLine().split(',');
+
+    while ((line = br.readLine()) !== null) {
+        var values = line.split(',');
+        var registro = {};
+        for (var i = 0; i < headers.length; i++) {
+            registro[headers[i]] = values[i];
+        }
+        registros.push(registro);
+    }
+    br.close();
+    return registros;
+}
+
+// Función para buscar registros por nombre
+function buscarPorNombre(registros, nombre) {
+    return registros.filter(registro => {
+		var nombreComponente = registro["Nombre Componente"];
+        if (nombreComponente) {
+            return nombreComponente.toLowerCase().includes(nombre.toLowerCase());
+        }
+        return false;
+    });
+}
+
+// Función para buscar registros por nombre y tipo de componente
+function buscarPorNombreYTipo(registros, nombre, tipo) {
+    return registros.filter(registro => {
+        var nombreComponente = registro["Nombre Componente"];
+        var tipoComponente = registro["Tipo Componente"];
+        if (nombreComponente && tipoComponente) {
+            return nombreComponente.toLowerCase().includes(nombre.toLowerCase()) &&
+                   tipoComponente.toLowerCase().includes(tipo.toLowerCase());
+        }
+        return false;
+    });
+}
+
+// Ejemplo de uso
+var componenteSeleccionado = selection.first();
+if (componenteSeleccionado) {
+    console.log('Nombre del componente: ' + componenteSeleccionado.getName());
+	elementoABuscar = componenteSeleccionado.getName();
+
+    // Verificar si el componente tiene propiedades
+    if (componenteSeleccionado.getType() === 'application-component' || 
+		componenteSeleccionado.getType() === 'application-interface' ||
+		componenteSeleccionado.getType() === 'data-object') {
+	
+		// Lista Propiedades
+		componenteSeleccionado.prop().forEach(function(pp) {
+			//console.log('key: ' + pp + ' - val: ' + componenteSeleccionado.prop(pp));
+			
+			atributos.push({propKey:pp, propVal: componenteSeleccionado.prop(pp)});
+		});
+	
+    } else {
+        console.log('El componente seleccionado no es un elemento ArchiMate.');
+    }
+} else {
+    console.log('No hay ningún componente seleccionado.');
+}
+
+
+
+//////////
+
+function BuscarAtributoDeElemento(objeto, keyBuscado) {
+    
+	var atributoEncontrado = atributos.find(function(atributo) {
+		return atributo.propKey === keyBuscado;
+	});
+
+	if (atributoEncontrado) {
+		console.log('Key: ' + atributoEncontrado.propKey + ', Value: ' + atributoEncontrado.propVal);
+		return atributoEncontrado.propVal;
+	} else {
+		console.log('Key no encontrado.');
+	}
+}
+
+/////////////7
+
+var registros = leerCSV(path);
+//var resultados = buscarPorNombre(registros, elementoABuscar);
+var resultados = buscarPorNombreYTipo(registros, elementoABuscar, BuscarAtributoDeElemento(atributos, 'COMPONENTTYPE'));
+
+console.log(`Se encontraron ${resultados.length} registros para el componente "${elementoABuscar}":` + '\n');
+
+resultados.forEach((registro, index) => {
+	console.log(ConvertirJson(registro) + '\n');
+    //console.log(`${index + 1}. Nombre: ${registro.nombre}, Edad: ${registro.edad}, Ocupación: ${registro.ocupacion}`);
+});
+
+
+
+//////////////////
+
+function ConvertirJson(objeto) {
+    return JSON.stringify(objeto);
+}
+
+//////////////////
+
+function asignarPropiedades(elemento, propiedades) {
+    for (var key in propiedades) {
+        if (propiedades.hasOwnProperty(key)) {
+            elemento.setProperty(key, propiedades[key]);
+        }
+    }
+}
+
+
+/////////////////
+
+function RutaOrigenDeDatosCSV(ruta, nombre, tipo) {
+	
+    var File = Java.type('java.io.File');
+	var FilenameFilter = Java.type('java.io.FilenameFilter');
+
+	try {
+		// Ruta de la carpeta fija
+		var carpeta = new File(ruta);
+
+		// Verificar si la carpeta existe y es un directorio
+		if (!carpeta.exists() || !carpeta.isDirectory()) {
+			throw new Error('La carpeta especificada no existe o no es un directorio.');
+		}
+
+		// Filtro para encontrar archivos que comiencen con "Componentes" y terminen con ".csv"
+		var filtro = new FilenameFilter({
+			accept: function(dir, name) {
+				return name.startsWith(nombre) && name.endsWith('.'+tipo);
+			}
+		});
+
+		// Obtener la lista de archivos que cumplen con el patrón
+		var archivos = carpeta.listFiles(filtro);
+
+		if (archivos.length > 0) {
+			// Si se encuentra al menos un archivo, usar el primero
+			var archivoSeleccionado = archivos[0];
+			//console.log('Archivo encontrado: ' + archivoSeleccionado.getName());
+			
+			return archivoSeleccionado;
+			
+		} else {
+			console.log('No se encontraron archivos que cumplan con el patrón.');
+		}
+	} catch (error) {
+		console.error('Error: ' + error.message);
+	}
+}
+

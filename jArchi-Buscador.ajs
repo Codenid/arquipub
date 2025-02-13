@@ -1,0 +1,69 @@
+﻿/*
+ * Agrega Tributos
+ */
+ 
+console.show();
+console.clear();
+console.log("Fijar Propiedades");
+
+// Ruta del archivo JSON
+let path = "C:\\Archis\\CatalogoComponentes.json"; // Cambiar por la ubicación real
+
+// Leer el archivo JSON
+var file = new java.io.File(path);
+var fileReader = new java.io.FileReader(file);
+var bufferedReader = new java.io.BufferedReader(fileReader);
+var stringBuilder = new java.lang.StringBuilder();
+var line;
+
+while ((line = bufferedReader.readLine()) !== null) {
+    stringBuilder.append(line);
+}
+
+bufferedReader.close();
+var datos = JSON.parse(stringBuilder.toString());
+
+
+// Función para buscar registros por nombre
+function buscarPorNombre(nombre) {
+    return datos.filter(registro => registro.nombre.toLowerCase() === nombre.toLowerCase());
+}
+
+	
+// Obtener el componente seleccionado
+var componenteSeleccionado = selection.first();
+let atributos = new Array();
+let elementoABuscar = '';
+
+if (componenteSeleccionado) {
+    console.log('Nombre del componente: ' + componenteSeleccionado.getName());
+	elementoABuscar = componenteSeleccionado.getName();
+
+    // Verificar si el componente tiene propiedades
+    if (componenteSeleccionado.getType() === 'application-component' || 
+		componenteSeleccionado.getType() === 'application-interface' ||
+		componenteSeleccionado.getType() === 'data-object') {
+	
+		// Lista Propiedades
+		componenteSeleccionado.prop().forEach(function(pp) {
+			console.log('key: ' + pp + ' - val: ' + componenteSeleccionado.prop(pp));
+			atributos.push({propKey:pp, propVal: componenteSeleccionado.prop(pp)});
+		});
+	
+    } else {
+        console.log('El componente seleccionado no es un elemento ArchiMate.');
+    }
+} else {
+    console.log('No hay ningún componente seleccionado.');
+}
+
+
+// Ejemplo de uso
+const nombreABuscar = elementoABuscar;
+const resultados = buscarPorNombre(nombreABuscar);
+
+console.log(`Se encontraron ${resultados.length} registros para el nombre "${nombreABuscar}":`);
+resultados.forEach((registro, index) => {
+    console.log(`${index + 1}. Nombre: ${registro.nombre}, Edad: ${registro.edad}, Ocupación: ${registro.ocupacion}`);
+});
+

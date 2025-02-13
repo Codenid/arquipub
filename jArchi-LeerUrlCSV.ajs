@@ -1,0 +1,40 @@
+﻿/*
+ * New Archi Script
+ */
+console.show();
+console.clear();
+console.log("New Archi Script");
+
+// URL del archivo CSV
+const csvUrl = 'https://credicorponline-my.sharepoint.com/:x:/g/personal/winstonflores_bcp_com_pe/Eex6mA40nFNKgStv9jbWVHYBAgWHpDFlT_riW8f5HkI8mw?email=winstonflores%40bcp.com.pe&e=TfpUp4';
+
+// Función para leer y procesar el archivo CSV
+async function leerCSV(url) {
+    try {
+        const response = fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/csv',
+                'Accept': 'text/csv'
+            }
+        });
+
+console.log("New Archi Script");
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.statusText}`);
+        }
+console.log("New Archi Script");
+
+        const data = await response.text();
+        
+        // Procesar el CSV
+        const filas = data.split('\n').map(fila => fila.split(','));
+        
+        console.log(filas);
+    } catch (error) {
+        console.error('Error al leer el archivo CSV:', error);
+    }
+}
+
+// Llamar a la función
+leerCSV(csvUrl);

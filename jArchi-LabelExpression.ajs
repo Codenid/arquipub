@@ -1,0 +1,70 @@
+﻿/*
+ * New Archi Script
+ */
+console.show();
+console.clear();
+console.log("New Archi Script");
+
+// Obtener el primer elemento seleccionado en el modelo
+var selectedElement = selection.first();
+
+// Verificar si hay un elemento seleccionado
+if (selectedElement) {
+    // Definir el nuevo valor para la propiedad personalizada
+    var newLabelValue = 'Nuevo Valor de Etiqueta';
+
+    // Establecer la propiedad personalizada
+    selectedElement.prop('customLabel', newLabelValue);
+
+    // Actualizar la expresión de la etiqueta para usar la propiedad personalizada
+    selectedElement.LabelExpression = '${property:LABEL} - ${name}';
+
+    console.log('El valor del label: ' + selectedElement.LabelExpression);
+    console.log('El valor de la propiedad customLabel ha sido actualizado a: ' + newLabelValue);
+} else {
+    console.log("No hay ningún elemento seleccionado.");
+}
+
+/*
+// Obtener el primer elemento seleccionado en el modelo
+var selectedElement = selection.first();
+
+// Verificar si hay un elemento seleccionado
+if (selectedElement) {
+   
+	console.log("Fea: " + selectedElement.getFeature('labelExpression'));
+   
+   
+   // Obtener todas las propiedades del elemento
+   var properties = selectedElement.prop();
+
+   // Mostrar todas las propiedades en la consola
+   console.log("Propiedades del elemento:");
+   for (var key in properties) {
+       if (properties.hasOwnProperty(key)) {
+           console.log(key + ": " + properties[key]);
+       }
+   }
+} else {
+   console.log("No hay ningún elemento seleccionado.");
+}
+
+console.log("++++++++++++++++++++++++++++++++");
+
+// Obtener el primer elemento seleccionado en el modelo
+var selectedElement = selection.first();
+// Verificar si hay un elemento seleccionado
+if (selectedElement) {
+   // Obtener el Label Expression del elemento
+   var labelExpression = selectedElement.prop("LABEL");
+   // Mostrar el Label Expression en la consola
+   if (labelExpression) {
+       console.log("Label Expression: " + labelExpression);
+   } else {
+       console.log("El elemento no tiene un Label Expression definido.");
+   }
+} else {
+   console.log("No hay ningún elemento seleccionado.");
+}
+
+*/

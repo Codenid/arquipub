@@ -1,0 +1,32 @@
+﻿/*
+ * Agrega Tributos
+ */
+ 
+console.show();
+console.clear();
+console.log("Obtener Propiedades" + '\n');
+
+// Función para generar un JSON con todas las propiedades del elemento seleccionado
+function generateJsonFromProperties(element) {
+	var properties = {};
+	
+    element.prop().forEach(function(prop) {
+        properties[prop] = element.prop(prop);
+    });
+    return JSON.stringify(properties);
+}
+
+// Obtener el elemento seleccionado en la vista actual
+var selectedElement = selection.first();
+
+// Verificar si hay un elemento seleccionado
+if (selectedElement) {
+    // Generar y imprimir JSON con las propiedades del elemento seleccionado
+    var jsonOutput = generateJsonFromProperties(selectedElement);
+    console.log("Propiedades:");
+	console.log(jsonOutput + "\n");
+	console.log("Label Expression:");
+	console.log(selectedElement.LabelExpression);
+} else {
+    console.log("No hay ningún elemento seleccionado.");
+}

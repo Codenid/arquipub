@@ -1,0 +1,40 @@
+﻿/*
+ * Agrega Tributos
+ */
+ 
+console.show();
+console.clear();
+console.log("Fijar Propiedades");
+
+// Ruta del archivo JSON
+let path = "C:\\Archis\\Atributos.json"; // Cambiar por la ubicación real
+
+// Leer el archivo JSON
+var file = new java.io.File(path);
+var fileReader = new java.io.FileReader(file);
+var bufferedReader = new java.io.BufferedReader(fileReader);
+var stringBuilder = new java.lang.StringBuilder();
+var line;
+
+while ((line = bufferedReader.readLine()) !== null) {
+    stringBuilder.append(line);
+}
+
+bufferedReader.close();
+var jsonData = JSON.parse(stringBuilder.toString());
+
+// Obtener el elemento seleccionado en el modelo
+let component = $(selection);
+
+// Verificar si el componente existe
+if (component) {
+    // Agregar propiedades desde el archivo JSON
+    for (var key in jsonData) {
+        if (jsonData.hasOwnProperty(key)) {
+            component.prop(key, jsonData[key]);
+        }
+    }
+    console.log("Propiedades agregadas exitosamente.");
+} else {
+    console.log("Componente no encontrado.");
+}

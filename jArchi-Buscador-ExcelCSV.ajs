@@ -1,0 +1,61 @@
+﻿/*
+ * Agrega Tributos
+ */
+ 
+console.show();
+console.clear();
+console.log("Fijar Propiedades");
+
+// Ruta del archivo CSV
+var csvFilePath = "C:\\CatalogoBB\\Componentes 11022025103148.csv";
+
+// Función para leer el archivo CSV usando clases de Java
+function readFileSync(path) {
+    var Files = Java.type("java.nio.file.Files");
+    var Paths = Java.type("java.nio.file.Paths");
+    return new java.lang.String(Files.readAllBytes(Paths.get(path)), "UTF-8");
+}
+
+// Función para convertir CSV a array de objetos
+function parseCSV(csv) {
+    var lines = csv.split("\n");
+    var result = [];
+    var headers = lines[0].split(",");
+
+
+    for (var i = 1; i < lines.length; i++) {
+        var obj = {};
+        var currentline = lines[i].split(",");
+	
+        for (var j = 0; j < headers.length; j++) {
+			if(j==0)
+			{
+				console.log('key: ' + headers[j] + ' - val: ' + currentline[j]);
+			}
+            obj[headers[j]] = currentline[j];
+        }
+        result.push(obj);
+    }
+    return result;
+}
+
+// Leer el archivo CSV
+var csvData = readFileSync(csvFilePath);
+var registros = parseCSV(csvData);
+console.log('Registros:', registros.length);
+
+// Función para buscar registros por ID
+function buscarPorCodigo(registros, CUD) {
+    return registros.filter(registro => {
+        var nombreComponente = registro[0];
+        console.log('Lukas: ' + nombreComponente);
+        if (nombreComponente) {
+            return nombreComponente.toLowerCase() === CUD.toLowerCase();
+        }
+        return false;
+    });
+}
+
+// Llamar a la función buscarPorCodigo
+var resultados = buscarPorCodigo(registros, 'CUD-000012');
+console.log('Resultados de la búsqueda:', resultados);

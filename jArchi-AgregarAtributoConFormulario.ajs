@@ -1,0 +1,33 @@
+﻿/*
+ * Agrega Tributos
+ */
+ 
+console.show();
+console.clear();
+console.log("Fijar Propiedades");
+
+// Mostrar cuadro de diálogo para ingresar JSON
+let userInput = window.prompt("Ingrese el JSON con los atributos:", '{"id": "1234","Owner": "Departamento de TI","Estado": "Activo"}');
+
+// Verificar si el usuario canceló la entrada
+if (!userInput) {
+   console.log("Importación cancelada.");
+}
+
+var jsonData = JSON.parse(userInput.toString());
+
+// Obtener el elemento seleccionado en el modelo
+let component = $(selection);
+
+// Verificar si el componente existe
+if (component) {
+    // Agregar propiedades desde el archivo JSON
+    for (var key in jsonData) {
+        if (jsonData.hasOwnProperty(key)) {
+            component.prop(key, jsonData[key]);
+        }
+    }
+    console.log("Propiedades agregadas exitosamente.");
+} else {
+    console.log("Componente no encontrado.");
+}
