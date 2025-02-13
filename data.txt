@@ -1,0 +1,5 @@
+Nombre,Edad,Correo Electrónico,País
+Juan Pérez,30,juan.perez@email.com,México
+Ana Gómez,25,ana.gomez@email.com,España
+Carlos López,28,carlos.lopez@email.com,Argentina
+Maria Ruiz,35,maria.ruiz@email.com,Colombia
