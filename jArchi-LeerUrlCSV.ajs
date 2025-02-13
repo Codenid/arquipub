@@ -6,35 +6,43 @@ console.clear();
 console.log("New Archi Script");
 
 // URL del archivo CSV
-const csvUrl = 'https://credicorponline-my.sharepoint.com/:x:/g/personal/winstonflores_bcp_com_pe/Eex6mA40nFNKgStv9jbWVHYBAgWHpDFlT_riW8f5HkI8mw?email=winstonflores%40bcp.com.pe&e=TfpUp4';
+const csvUrl = 'https://raw.githubusercontent.com/Codenid/arquipub/refs/heads/main/data.txt';
 
-// Función para leer y procesar el archivo CSV
-async function leerCSV(url) {
-    try {
-        const response = fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'text/csv',
-                'Accept': 'text/csv'
-            }
-        });
+// Función para procesar el CSV
+function procesarCSV(data) {
+    // Dividir el contenido por líneas
+    const filas = data.split('\n');
+    
+    // Iterar sobre cada fila
+    filas.forEach(fila => {
+        // Dividir cada fila por coma
+        const columnas = fila.split(',');
 
-console.log("New Archi Script");
-        if (!response.ok) {
-            throw new Error(`Error en la solicitud: ${response.statusText}`);
+        // Asegurarse de que la fila tenga la cantidad correcta de columnas
+        if (columnas.length >= 4) {
+            const nombre = columnas[0];
+            const edad = columnas[1];
+            const correo = columnas[2];
+            const pais = columnas[3];
+
+            // Mostrar los datos (esto se puede personalizar)
+            console.log(`Nombre: ${nombre}, Edad: ${edad}, Correo: ${correo}, País: ${pais}`);
         }
-console.log("New Archi Script");
-
-        const data = await response.text();
-        
-        // Procesar el CSV
-        const filas = data.split('\n').map(fila => fila.split(','));
-        
-        console.log(filas);
-    } catch (error) {
-        console.error('Error al leer el archivo CSV:', error);
-    }
+    });
 }
 
-// Llamar a la función
-leerCSV(csvUrl);
+// Función para descargar el CSV usando Java
+function descargarCSV(url) {
+    const javaURL = new java.net.URL(url);
+    const inputStream = javaURL.openStream();
+    const scanner = new java.util.Scanner(inputStream, "UTF-8").useDelimiter("\\A");
+    const data = scanner.hasNext() ? scanner.next() : "";
+    scanner.close();
+    return data;
+}
+
+// Procesar el CSV después de la descarga
+const data = descargarCSV(csvUrl);
+console.log(data);  // Aquí puedes llamar a procesarCSV(data)
+
+procesarCSV(data);
